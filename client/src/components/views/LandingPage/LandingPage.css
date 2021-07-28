@@ -1,0 +1,14 @@
+/**************************************************
+                    Landing Page
+***************************************************/
+
+
+.landing_container {
+    background-image: url('../../../images/shibuya2.jpg');
+    height: 80vh;
+    min-height: 500px;
+    background-size: 100%, cover;
+    background-position: center;
+    width: 100%;
+    position: relative;
+}
