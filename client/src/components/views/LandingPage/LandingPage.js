@@ -1,6 +1,6 @@
 import React from 'react'
 import backgroundPic from '../../../images/shibuya2.jpg'
-import './LandingPage.css'
+import './LandingPage.less'
 import { Button } from 'antd'
 
 function LandingPage() {
