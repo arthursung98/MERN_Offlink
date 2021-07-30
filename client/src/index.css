@@ -22,9 +22,10 @@ body {
 .app {
   flex-direction: column;
   display: flex;
-  justify-content: center;
+  /*justify-content: center;*/
+  padding-top: 10vh;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
 }
 
 input.error {

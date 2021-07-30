@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 import { Formik } from 'formik';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import { registerUser } from "../../../_actions/user_actions";
 import { useDispatch } from "react-redux";
 
@@ -36,44 +36,40 @@ const tailFormItemLayout = {
 
 function RegisterPage(props) {
   const dispatch = useDispatch();
-  return (
 
+  return (
     <Formik
       initialValues={{
         email: '',
         username: '',
-        name: '',
         password: '',
         confirmPassword: ''
       }}
-      validationSchema={Yup.object().shape({
-        name: Yup.string()
-          .required('Name is required'),
-        username: Yup.string()
-          .required('Username is required'),
-        email: Yup.string()
-          .email('Email is invalid')
-          .required('Email is required'),
-        password: Yup.string()
-          .min(6, 'Password must be at least 6 characters')
+
+      validationSchema={ yup.object().shape({
+        email: yup.string().email('Email is invalid').required('Email is required'),
+        username: yup.string().required('Username is required'),
+        password: yup.string().min(6, 'Password must be at least 6 characters')
           .required('Password is required'),
-        confirmPassword: Yup.string()
-          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
           .required('Confirm Password is required')
       })}
+
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
 
           let dataToSubmit = {
             email: values.email,
-            password: values.password,
-            name: values.name,
             username: values.lastname,
-            image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
+            password: values.password,
+            submitted_company_info: false
+            // image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
           };
 
           dispatch(registerUser(dataToSubmit)).then(response => {
             if (response.payload.registerSuccess) {
+              alert("To use full functions of Offlink, you must register your work information." + 
+              "Please Log In and set up your info on MyPage.")
               props.history.push("/login");
             } else {
               alert(response.payload.err.errmsg)
@@ -96,12 +92,13 @@ function RegisterPage(props) {
           handleSubmit,
           handleReset,
         } = props;
+
         return (
           <div className="app">
-            <h2>Sign up</h2>
+            <h2>User Information</h2>
             <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit} >
 
-              <Form.Item required label="Name">
+              {/* <Form.Item required label="Name">
                 <Input
                   id="name"
                   placeholder="Enter your name"
@@ -116,7 +113,7 @@ function RegisterPage(props) {
                 {errors.name && touched.name && (
                   <div className="input-feedback">{errors.name}</div>
                 )}
-              </Form.Item>
+                </Form.Item> */}
 
               <Form.Item required label="Username">
                 <Input
@@ -185,7 +182,7 @@ function RegisterPage(props) {
                   <div className="input-feedback">{errors.confirmPassword}</div>
                 )}
               </Form.Item>
-
+              
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
                   Submit

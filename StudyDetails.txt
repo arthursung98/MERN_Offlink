@@ -1,0 +1,2 @@
+1. Bcrypt & Password Encryption
+2. Login Logic and specific code

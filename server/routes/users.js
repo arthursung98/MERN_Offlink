@@ -12,8 +12,8 @@ router.get("/auth", auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
         email: req.user.email,
-        name: req.user.name,
         username: req.user.username,
+        submitted_company_info: req.user.submitted_company_info,
         isAdmin: false,
         isAuth: true
     });

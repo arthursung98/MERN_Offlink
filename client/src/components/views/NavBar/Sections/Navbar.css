@@ -1,4 +1,5 @@
 @import '~antd/dist/antd.css';
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap');
 
 .menu {
   padding: 0 20px;
@@ -16,7 +17,7 @@
 .menu__logo a {
   display: inline-block;
   font-size: 20px;
-  padding: 19px 20px;
+  padding: 19px 10px;
 }
 
 .menu__container .ant-menu-item {
@@ -50,7 +51,8 @@
   padding: 6px;
   margin-top: 8px;
   display: none !important; /* use of important to overwrite ant-btn */
-  background: #3e91f7;
+  background: #0057ff
+  /*#3e91f7*/;
 }
 
 .menu_drawer .ant-drawer-body {

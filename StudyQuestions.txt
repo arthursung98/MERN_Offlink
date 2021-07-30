@@ -1,0 +1,12 @@
+1. Why did you use React instead of Vue or Angular?
+2. How did you hide credentials & sensitive information?
+    Ex) Login, bcrypt encryption
+3. What does your authorization scheme look like?
+4. Explain Real DOM vs Virtual DOM
+5. What is a React-Router?
+6. Why did you use Redux?
+7. Tell me about how actions & reducers work
+8. What is Props?
+9. Explain the difference between React class components and function components. - What is the trade off?
+10. Explain useEffect / React Hooks.
+11. Explain how arrow functions are different from normal functions.
