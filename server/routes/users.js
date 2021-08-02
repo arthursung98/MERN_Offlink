@@ -11,16 +11,22 @@ const { auth } = require("../middleware/auth");
 router.get("/auth", auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
+        isAuth: true,
+        isAdmin: false,
+        name: req.user.name,
         email: req.user.email,
         username: req.user.username,
-        submitted_company_info: req.user.submitted_company_info,
-        isAdmin: false,
-        isAuth: true
+        phone_number: req.user.phone_number,
+        work_info_submitted: req.user.work_info_submitted,
+        interest_industry: req.user.interest_industry,
+        company_name: req.user.company_name,
+        company_lat: req.user.company_lat,
+        company_lng: req.user.company_lng,
+        job_title: req.user.job_title
     });
 });
 
 router.post("/register", (req, res) => {
-
     const user = new User(req.body);
 
     user.save((err, doc) => {

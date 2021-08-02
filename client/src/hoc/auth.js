@@ -15,6 +15,7 @@ export default function (SpecificComponent, option, adminRoute = null) {
                 //Not Loggined in Status 
                 if (!response.payload.isAuth) {
                     if (option) {
+                        alert('Please Log In first');
                         props.history.push('/login')
                     }
                     //Loggined in Status 
@@ -31,7 +32,6 @@ export default function (SpecificComponent, option, adminRoute = null) {
                     }
                 }
             })
-
         }, [])
 
         return (

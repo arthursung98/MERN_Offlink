@@ -1,15 +1,8 @@
 import React from "react";
-import moment from "moment";
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { registerUser } from "../../../_actions/user_actions";
-import { useDispatch } from "react-redux";
-
-import {
-  Form,
-  Input,
-  Button,
-} from 'antd';
+import { Form, Input, Button, Steps } from 'antd';
+const { Step } = Steps;
 
 const formItemLayout = {
   labelCol: {
@@ -28,15 +21,13 @@ const tailFormItemLayout = {
       offset: 0,
     },
     sm: {
-      span: 16,
-      offset: 8,
+      span: 12,
+      offset: 10,
     },
   },
 };
 
 function RegisterPage(props) {
-  const dispatch = useDispatch();
-
   return (
     <Formik
       initialValues={{
@@ -45,8 +36,7 @@ function RegisterPage(props) {
         password: '',
         confirmPassword: ''
       }}
-
-      validationSchema={ yup.object().shape({
+      validationSchema={yup.object().shape({
         email: yup.string().email('Email is invalid').required('Email is required'),
         username: yup.string().required('Username is required'),
         password: yup.string().min(6, 'Password must be at least 6 characters')
@@ -54,30 +44,11 @@ function RegisterPage(props) {
         confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
           .required('Confirm Password is required')
       })}
-
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-
-          let dataToSubmit = {
-            email: values.email,
-            username: values.lastname,
-            password: values.password,
-            submitted_company_info: false
-            // image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
-          };
-
-          dispatch(registerUser(dataToSubmit)).then(response => {
-            if (response.payload.registerSuccess) {
-              alert("To use full functions of Offlink, you must register your work information." + 
-              "Please Log In and set up your info on MyPage.")
-              props.history.push("/login");
-            } else {
-              alert(response.payload.err.errmsg)
-            }
-          })
-
-          setSubmitting(false);
-        }, 500);
+      onSubmit={(values) => {
+        props.history.push({
+          pathname: "/register2",
+          state: values
+        });
       }}
     >
       {props => {
@@ -85,36 +56,25 @@ function RegisterPage(props) {
           values,
           touched,
           errors,
-          dirty,
           isSubmitting,
           handleChange,
           handleBlur,
           handleSubmit,
-          handleReset,
         } = props;
 
         return (
           <div className="app">
-            <h2>User Information</h2>
-            <Form style={{ minWidth: '375px' }} {...formItemLayout} onSubmit={handleSubmit} >
-
-              {/* <Form.Item required label="Name">
-                <Input
-                  id="name"
-                  placeholder="Enter your name"
-                  type="text"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.name && touched.name ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.name && touched.name && (
-                  <div className="input-feedback">{errors.name}</div>
-                )}
-                </Form.Item> */}
-
+            <Steps current={0} style={{ width: '30%' }}>
+              <Step
+                title="Page 1 of 2"
+                description="User Information" />
+              <Step
+                title="Page 2 of 2"
+                description="Job Information" />
+            </Steps>
+            <br />
+            <br />
+            <Form style={{ minWidth: '375px', paddingRight: '5%' }} {...formItemLayout} onSubmit={handleSubmit} >
               <Form.Item required label="Username">
                 <Input
                   id="username"
@@ -182,10 +142,10 @@ function RegisterPage(props) {
                   <div className="input-feedback">{errors.confirmPassword}</div>
                 )}
               </Form.Item>
-              
+
               <Form.Item {...tailFormItemLayout}>
                 <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-                  Submit
+                  Next
                 </Button>
               </Form.Item>
             </Form>
@@ -194,7 +154,6 @@ function RegisterPage(props) {
       }}
     </Formik>
   );
-};
-
+}
 
 export default RegisterPage

@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const moment = require("moment");
 
 const userSchema = mongoose.Schema({
+    name: {
+        type: String
+    },
     email: {
         type: String
     },
@@ -15,22 +18,39 @@ const userSchema = mongoose.Schema({
         type: String,
         length: 15
     },
-    industry: {
-        type: String
+    phone_number: {
+        type: String,
+        min: 10,
+        max: 10
     },
-    submitted_company_info:{
+    work_info_submitted: {
         type: Boolean
     },
-    company: {
+    job_title: {
         type: String
     },
-    company_x: {
+    company_name: {
+        type: String
+    },
+    company_lat: {
         type: Number
     },
-    company_y: {
+    company_lng: {
         type: Number
     },
-    job_title: {
+    address: {
+        type: String
+    },
+    city: {
+        type: String
+    },
+    state: {
+        type: String
+    },
+    zipcode: {
+        type: Number
+    },
+    interest_industry: {
         type: String
     },
     isAdmin: {
@@ -43,7 +63,6 @@ const userSchema = mongoose.Schema({
         type: Number
     }
 })
-
 
 userSchema.pre('save', function( next ) {
     var user = this;
