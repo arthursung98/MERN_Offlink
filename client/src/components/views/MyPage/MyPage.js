@@ -98,77 +98,17 @@ class MyPage extends React.Component {
 		}
 	}
 
-	onMarkerDragEnd = (event) => {
-		let newLat = event.latLng.lat();
-		let newLng = event.latLng.lng();
-
-		Geocode.fromLatLng(newLat, newLng)
-			.then(response => {
-				const address = response.results[0].formatted_address,
-					addressArray = response.results[0].address_components,
-					city = this.getCity(addressArray),
-					state = this.getState(addressArray);
-
-				this.setState({
-					address: (address) ? address : '',
-					city: (city) ? city : '',
-					state: (state) ? state : '',
-					mapPosition: {
-						lat: newLat,
-						lng: newLng
-					},
-					markerPosition: {
-						lat: newLat,
-						lng: newLng
-					}
-				})
-			})
-	}
-
-	onPlaceSelected = (place) => {
-		const address = place.formatted_address,
-			addressArray = place.address_components,
-			city = this.getCity(addressArray),
-			state = this.getState(addressArray),
-			latValue = place.geometry.location.lat(),
-			lngValue = place.geometry.location.lng();
-
-		this.setState({
-			address: (address) ? address : '',
-			city: (city) ? city : '',
-			state: (state) ? state : '',
-			mapPosition: {
-				lat: latValue,
-				lng: lngValue
-			},
-			markerPosition: {
-				lat: latValue,
-				lng: lngValue
-			}
-		})
-	}
 
 
 	render() {
 		const MapWithAMarker = withScriptjs(withGoogleMap(props =>
 			<GoogleMap
-				defaultZoom={11}
+				defaultZoom={13}
 				defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
 			>
 				<Marker
-					draggable={true}
-					onDragEnd={this.onMarkerDragEnd}
 					position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }} >
 				</Marker>
-				<AutoComplete
-					style={{
-						width: '100%',
-						height: '40px',
-						marginTop: '10px',
-					}}
-					types={['(regions)']}
-					onPlaceSelected={this.onPlaceSelected}
-				/>
 			</GoogleMap>
 		));
 
@@ -188,7 +128,7 @@ class MyPage extends React.Component {
 						<MapWithAMarker
 							googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&v=3.exp&libraries=geometry,drawing,places`}
 							loadingElement={<div style={{ height: `100%` }} />}
-							containerElement={<div style={{ width: `40%`, height: `200px`, float: 'left' }} />}
+							containerElement={<div style={{ width: `40%`, height: `300px`, float: 'left' }} />}
 							mapElement={<div style={{ height: `100%` }} />}
 						/>
 					</div>
