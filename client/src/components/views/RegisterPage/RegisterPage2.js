@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { registerUser } from '../../../_actions/user_actions';
 import Geocode from 'react-geocode';
 import AutoComplete from 'react-google-autocomplete';
 import {
@@ -13,7 +11,7 @@ import { MAPS_API_KEY } from '../../Config';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import './RegisterPage.less';
-import { Form, Input, Steps, Button } from 'antd';
+import { Form, Input, Steps, Button, Typography } from 'antd';
 
 const { Step } = Steps;
 
@@ -37,14 +35,13 @@ const tailFormItemLayout = {
 		},
 		sm: {
 			span: 12,
-			offset: 12,
+			offset: 9,
 		},
 	},
 };
 
 function RegisterPage2(props) {
 	const userInfo = props.location.state;
-	const dispatch = useDispatch();
 	// States
 	const [Address, setAddress] = useState("");
 	const [City, setCity] = useState("");
@@ -182,45 +179,39 @@ function RegisterPage2(props) {
 	return (
 		<Formik
 			initialValues={{
+				company_name: '',
+				job_title: '',
 				address: '',
 				city: '',
 				state: '',
 				zipcode: ''
 			}}
 			validationSchema={yup.object().shape({
+				company_name: yup.string().required('Company Name is required'),
+				job_title: yup.string().required('Job Title is required'),
 				address: yup.string().required('Address is required'),
 				zipcode: yup.string().required('Zipcode is required')
 					.min(5, 'Zipcode must be 5 digits')
 			})}
-			onSubmit={(value, { setSubmitting }) => {
-				setTimeout(() => {
-					let dataToSubmit = {
-						firstname: userInfo.firstname,
-						lastname: userInfo.lastname,
-						email: userInfo.email,
-						password: userInfo.password,
-						username: userInfo.username,
-						work_info_submitted: true,
-						company_lat: MarkerLat,
-						company_lng: MarkerLng,
-						address: value.address,
-						city: City,
-						state: State,
-						zipcode: value.zipcode
-					};
+			onSubmit={(value => {
+				let pageTwoInfo = {
+					work_info_submitted: true,
+					job_title: value.job_title,
+					company_name: value.company_name,
+					company_lat: MarkerLat,
+					company_lng: MarkerLng,
+					address: value.address,
+					city: City,
+					state: State,
+					zipcode: value.zipcode
+				};
 
-					dispatch(registerUser(dataToSubmit)).then(response => {
-						if (response.payload.registerSuccess) {
-							alert('Success! Please Log in.');
-							props.history.push("/login");
-						} else {
-							alert(response.payload.err.errmsg)
-						}
-					})
-
-					setSubmitting(false);
-				}, 500);
-			}}
+				props.history.push({
+					pathname: "/register3",
+					pageOneInfo: userInfo,
+					pageTwoInfo: pageTwoInfo
+				})
+			})}
 		>
 			{props => {
 				const {
@@ -235,24 +226,72 @@ function RegisterPage2(props) {
 
 				return (
 					<div className="app">
-						<Steps current={1} style={{ width: '50%', minWidth: '600px' }}>
-              <Step
-                title="Page 1 of 3"
-                description="User Information" />
-              <Step
-                title="Page 2 of 3"
-                description="Job Information" />
-              <Step
-                title="Page 3 of 3"
-                description="Interest Groups">
-              </Step>
-            </Steps>
-						<br />
+						<Steps current={1} style={{ width: '50%', minWidth: '500px', maxWidth: '650px' }}>
+							<Step
+								title="Page 1 of 3"
+								description="User Information" />
+							<Step
+								title="Page 2 of 3"
+								description="Work Information" />
+							<Step
+								title="Page 3 of 3"
+								description="Interest Groups">
+							</Step>
+						</Steps>
 						<br />
 						<br />
 						<div className="register">
 							<div className="register_form">
-								<Form style={{ minWidth: '375px', paddingRight: '5%' }}{...formItemLayout} onSubmit={handleSubmit} >
+								<Form 
+									style={{ minWidth: '375px', paddingRight: '5%'}}
+									onSubmit={handleSubmit}
+									{...formItemLayout} >
+								<Typography.Title
+									level={4}
+									style={{ paddingLeft: '20%', marginBottom: '20px' }}>
+									Company Information
+								</Typography.Title>
+
+									<Form.Item required label="Company Name">
+										<Input
+											id="company_name"
+											placeholder="Enter your Company Name"
+											type="text"
+											value={values.company_name}
+											onChange={handleChange}
+											onBlur={handleBlur}
+											className={
+												errors.company_name && touched.company_name ? 'text-input error' : 'text-input'
+											}
+										/>
+										{errors.company_name && touched.company_name && (
+											<div className="input-feedback">{errors.company_name}</div>
+										)}
+									</Form.Item>
+
+									<Form.Item required label="Job Title">
+										<Input
+											id="job_title"
+											placeholder="Enter your Job Title"
+											type="text"
+											value={values.job_title}
+											onChange={handleChange}
+											onBlur={handleBlur}
+											className={
+												errors.job_title && touched.job_title ? 'text-input error' : 'text-input'
+											}
+										/>
+										{errors.job_title && touched.job_title && (
+											<div className="input-feedback">{errors.job_title}</div>
+										)}
+									</Form.Item>
+
+									<Typography.Title
+										level={4}
+										style={{ paddingLeft: '15%', marginBottom: '20px' }}>
+										Company Location
+									</Typography.Title>
+
 									<Form.Item required label="Address">
 										<Input
 											id="address"
@@ -308,7 +347,7 @@ function RegisterPage2(props) {
 										<Input
 											id="zipcode"
 											placeholder={Zipcode}
-											type="number"
+											type="text"
 											value={values.zipcode}
 											onChange={handleChange}
 											onBlur={handleBlur}
@@ -323,7 +362,7 @@ function RegisterPage2(props) {
 
 									<Form.Item {...tailFormItemLayout}>
 										<Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
-											Submit
+											Next
 										</Button>
 									</Form.Item>
 								</Form>
@@ -333,7 +372,7 @@ function RegisterPage2(props) {
 								<MapWithAMarker
 									googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&v=3.exp&libraries=geometry,drawing,places`}
 									loadingElement={<div style={{ height: `100%` }} />}
-									containerElement={<div style={{ width: `100%`, height: `300px` }} />}
+									containerElement={<div style={{ width: `100%`, height: `350px` }} />}
 									mapElement={<div style={{ height: `100%` }} />}
 								/>
 							</div>

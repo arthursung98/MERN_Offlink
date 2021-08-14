@@ -1,141 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import UserInfo from './sections/UserInfo';
+import WorkInfo from './sections/WorkInfo';
+import Axios from 'axios';
+import { USER_SERVER } from '../../Config';
+import avatar from '../../../images/headshot.jpg';
 import './MyPage.less'
 import { Divider } from 'antd';
-import UserInfo from './sections/UserInfo';
-import Axios from 'axios';
-import Geocode from 'react-geocode';
-import AutoComplete from 'react-google-autocomplete';
-import {
-	withScriptjs,
-	withGoogleMap,
-	GoogleMap,
-	Marker,
-} from "react-google-maps";
-import { USER_SERVER, MAPS_API_KEY } from '../../Config';
 
-Geocode.setApiKey(MAPS_API_KEY);
+function MyPage() {
+	const [FirstName, setFirstName] = useState("");
+	const [LastName, setLastName] = useState("");
+	const [PhoneNumber, setPhoneNumber] = useState("");
+	const [Email, setEmail] = useState("");
+	const [Username, setUsername] = useState("");
+	const [JobTitle, setJobTitle] = useState("");
+	const [CompanyName, setCompanyName] = useState("");
+	const [Company_Lat, setCompany_Lat] = useState(0.0);
+	const [Company_Lng, setCompany_Lng] = useState(0.0);
+	const [Address, setAddress] = useState("");
+	const [City, setCity] = useState("");
+	const [State, setState] = useState("");
+	const [Zipcode, setZipcode] = useState("");
 
-class MyPage extends React.Component {
-	state = {
-		userInfo: {},
-		address: "",
-		city: "",
-		state: "",
-		zoom: 15,
-		mapPosition: {
-			lat: 0,
-			lng: 0
-		},
-		markerPosition: {
-			lat: 0,
-			lng: 0
-		}
-	}
-
-	componentDidMount() {
+	useEffect(() => {
 		Axios.get(`${USER_SERVER}/auth`)
 			.then(response => {
 				if (response.status === 200) {
-					this.setState({
-						userInfo: response.data
-					})
+					setFirstName(response.data.firstname);
+					setLastName(response.data.lastname);
+					setPhoneNumber(response.data.phone_number);
+					setEmail(response.data.email);
+					setUsername(response.data.username);
+					setJobTitle(response.data.job_title);
+					setCompanyName(response.data.company_name);
+					setCompany_Lat(response.data.company_lat);
+					setCompany_Lng(response.data.company_lng);
+					setAddress(response.data.address);
+					setCity(response.data.city);
+					setState(response.data.state);
+					setZipcode(response.data.zipcode);
 				} else {
 					alert("Failed to get user information for My Page")
 				}
 			})
+	}, [])
 
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(position => {
-				var currentLat = position.coords.latitude;
-				var currentLng = position.coords.longitude;
-
-				this.setState({
-					mapPosition: {
-						lat: currentLat,
-						lng: currentLng
-					},
-					markerPosition: {
-						lat: currentLat,
-						lng: currentLng
-					}
-				}, () => {
-					Geocode.fromLatLng(currentLat, currentLng)
-						.then(response => {
-							const address = response.results[0].formatted_address,
-								addressArray = response.results[0].address_components,
-								city = this.getCity(addressArray),
-								state = this.getState(addressArray);
-
-							this.setState({
-								address: (address) ? address : '',
-								city: (city) ? city : '',
-								state: (state) ? state : ''
-							})
-						})
-				})
-			})
-		}
-	}
-
-	getCity = (addressArray) => {
-		let city = '';
-
-		for (let index = 0; index < addressArray.length; index++) {
-			if (addressArray[index].types[0] && 'administrative_area_level_2' === addressArray[index].types[0]) {
-				city = addressArray[index].long_name;
-				return city;
-			}
-		}
-	}
-	getState = (addressArray) => {
-		let state = '';
-
-		for (let index = 0; index < addressArray.length; index++) {
-			if (addressArray[index].types[0] && 'administrative_area_level_1' === addressArray[index].types[0]) {
-				state = addressArray[index].long_name;
-				return state;
-			}
-		}
-	}
-
-
-
-	render() {
-		const MapWithAMarker = withScriptjs(withGoogleMap(props =>
-			<GoogleMap
-				defaultZoom={13}
-				defaultCenter={{ lat: this.state.mapPosition.lat, lng: this.state.mapPosition.lng }}
-			>
-				<Marker
-					position={{ lat: this.state.markerPosition.lat, lng: this.state.markerPosition.lng }} >
-				</Marker>
-			</GoogleMap>
-		));
-
-		return (
+	return (
+		<div className="app">
 			<div className="mypage_container">
 				<div className="mypage_left">
-					<img src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-						className="profile_pic" />
-					<Divider>Interests</Divider>
+					<img src={avatar} className="profile_pic" />
+					<Divider style={{ marginBottom: "12px" }}>Work</Divider>
+					<WorkInfo
+						company_name={CompanyName}
+						company_lat={Company_Lat}
+						company_lng={Company_Lng}
+						address={Address}
+						city={City}
+						state={State}
+						zipcode={Zipcode}
+					/>
 				</div>
 
 				<div className="mypage_right">
 					<UserInfo
-						userInfo={this.state.userInfo} />
-
-					<div className="address_info">
-						<MapWithAMarker
-							googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}&v=3.exp&libraries=geometry,drawing,places`}
-							loadingElement={<div style={{ height: `100%` }} />}
-							containerElement={<div style={{ width: `40%`, height: `300px`, float: 'left' }} />}
-							mapElement={<div style={{ height: `100%` }} />}
-						/>
-					</div>
+						firstname={FirstName}
+						lastname={LastName}
+						phone_number={PhoneNumber}
+						email={Email}
+						username={Username}
+						job_title={JobTitle}
+					/>
 				</div>
 			</div>
-		)
-	}
+		</div>
+	)
 }
 
 export default MyPage

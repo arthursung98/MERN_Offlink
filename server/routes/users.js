@@ -12,17 +12,21 @@ router.get("/auth", auth, (req, res) => {
     res.status(200).json({
         _id: req.user._id,
         isAuth: true,
-        isAdmin: false,
-        name: req.user.name,
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        phone_number: req.user.phone_number,
         email: req.user.email,
         username: req.user.username,
-        phone_number: req.user.phone_number,
-        work_info_submitted: req.user.work_info_submitted,
-        interest_industry: req.user.interest_industry,
+        job_title: req.user.job_title,
         company_name: req.user.company_name,
         company_lat: req.user.company_lat,
         company_lng: req.user.company_lng,
-        job_title: req.user.job_title
+        address: req.user.address,
+        city: req.user.city,
+        state: req.user.state,
+        zipcode: req.user.zipcode,
+        interest_industry: req.user.interest_industry,
+        isAdmin: false
     });
 });
 

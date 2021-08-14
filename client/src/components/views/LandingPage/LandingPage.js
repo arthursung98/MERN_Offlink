@@ -1,5 +1,5 @@
 import React from 'react'
-import backgroundPic from '../../../images/shibuya2.jpg'
+import backgroundPic from '../../../images/shibuya.jpg'
 import './LandingPage.less'
 import { Button } from 'antd'
 

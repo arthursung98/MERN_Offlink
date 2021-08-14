@@ -1,9 +1,8 @@
 import React from "react";
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import { Form, Input, Button, Steps, Select} from 'antd';
+import { Form, Input, Button, Steps } from 'antd';
 const { Step } = Steps;
-const { Option } = Select;
 
 const formItemLayout = {
   labelCol: {
@@ -27,13 +26,6 @@ const tailFormItemLayout = {
     },
   },
 };
-const prefixSelector = (
-  <Form.Item name="prefix" noStyle>
-    <Select style={{ width: 70 }}>
-      <Option value="1">+1</Option>
-    </Select>
-  </Form.Item>
-);
 
 function RegisterPage(props) {
   return (
@@ -50,7 +42,8 @@ function RegisterPage(props) {
       validationSchema={yup.object().shape({
         firstname: yup.string().required('First Name is required'),
         lastname: yup.string().required('Last Name is required'),
-        phone_number: yup.string().required('Phone is required'),
+        phone_number: yup.string().required('Phone is required')
+          .min(10, 'Phone Number must be exactly 10 digits'),
         username: yup.string().required('Username is required'),
         email: yup.string().email('Email is invalid').required('Email is required'),
         password: yup.string().min(6, 'Password must be at least 6 characters')
@@ -78,13 +71,13 @@ function RegisterPage(props) {
 
         return (
           <div className="app">
-            <Steps current={0} style={{ width: '50%', minWidth: '600px' }}>
+            <Steps current={0} style={{ width: '50%', minWidth: '500px', maxWidth: '650px' }}>
               <Step
                 title="Page 1 of 3"
                 description="User Information" />
               <Step
                 title="Page 2 of 3"
-                description="Job Information" />
+                description="Work Information" />
               <Step
                 title="Page 3 of 3"
                 description="Interest Groups">
@@ -130,7 +123,7 @@ function RegisterPage(props) {
               <Form.Item required label="Phone #">
                 <Input
                   id="phone_number"
-                  placeholder="Enter your Phone number"
+                  placeholder="Enter without dashes(-)"
                   type="text"
                   value={values.phone_number}
                   onChange={handleChange}
@@ -141,23 +134,6 @@ function RegisterPage(props) {
                 />
                 {errors.phone_number && touched.phone_number && (
                   <div className="input-feedback">{errors.phone_number}</div>
-                )}
-              </Form.Item>
-
-              <Form.Item required label="Username">
-                <Input
-                  id="username"
-                  placeholder="Enter your Username"
-                  type="text"
-                  value={values.username}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    errors.username && touched.username ? 'text-input error' : 'text-input'
-                  }
-                />
-                {errors.username && touched.username && (
-                  <div className="input-feedback">{errors.username}</div>
                 )}
               </Form.Item>
 
@@ -175,6 +151,23 @@ function RegisterPage(props) {
                 />
                 {errors.email && touched.email && (
                   <div className="input-feedback">{errors.email}</div>
+                )}
+              </Form.Item>
+
+              <Form.Item required label="Username">
+                <Input
+                  id="username"
+                  placeholder="Enter your Username"
+                  type="text"
+                  value={values.username}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={
+                    errors.username && touched.username ? 'text-input error' : 'text-input'
+                  }
+                />
+                {errors.username && touched.username && (
+                  <div className="input-feedback">{errors.username}</div>
                 )}
               </Form.Item>
 

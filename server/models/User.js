@@ -15,12 +15,12 @@ const userSchema = mongoose.Schema({
         type: String,
         min: 10,
     },
+    email: {
+        type: String
+    },
     username: {
         type: String,
         length: 15
-    },
-    email: {
-        type: String
     },
     password: {
         type: String
