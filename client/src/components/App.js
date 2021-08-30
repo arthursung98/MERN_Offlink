@@ -10,6 +10,7 @@ import RegisterPage3 from './views/RegisterPage/RegisterPage3';
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
 import MyPage from "./views/MyPage/MyPage";
+import LinkMain from "./views/Link/LinkMain";
 
 //null   Anyone Can go inside
 //true   only logged in user can go inside
@@ -27,6 +28,7 @@ function App() {
           <Route exact path="/register2" component={Auth(RegisterPage2, false)} />
           <Route exact path="/register3" component={Auth(RegisterPage3, false)} />
           <Route exact path="/mypage" component={Auth(MyPage, true)}/>
+          <Route exact path="/link" component={LinkMain} />
         </Switch>
       </div>
       <Footer />

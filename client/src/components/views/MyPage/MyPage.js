@@ -27,7 +27,7 @@ function MyPage() {
 			.then(response => {
 				if (response.status === 200) {
 					setFirstName(response.data.firstname);
-					setLastName(response.data.lastname);
+					setLastName(response.data.lastnadme);
 					setPhoneNumber(response.data.phone_number);
 					setEmail(response.data.email);
 					setUsername(response.data.username);
